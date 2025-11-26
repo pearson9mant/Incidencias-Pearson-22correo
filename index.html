@@ -20,8 +20,8 @@
 
     h2 {
         text-align: center;
-        font-size: 24px;
-        margin-bottom: 20px;
+        font-size: 26px;
+        margin-bottom: 25px;
     }
 
     label {
@@ -44,14 +44,14 @@
 
     button {
         width: 100%;
-        padding: 18px;
+        padding: 20px;
         background-color: #0077ff;
         color: #fff;
         border: none;
         border-radius: 10px;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
-        margin-top: 25px;
+        margin-top: 30px;
     }
 
     button:active {
@@ -67,14 +67,16 @@
 <label>Edificio</label>
 <select id="edificio" onchange="cargarAulas()">
     <option value="">Seleccionar edificio...</option>
-    <option value="infantil">Edif. Infantil</option>
-    <option value="anexo">Edif. Anexo</option>
+    <option value="Infantil">Edif. Infantil</option>
+    <option value="Anexo">Edif. Anexo</option>
 </select>
 
 <label>Aula / Espacio</label>
-<select id="aula">
+<select id="aula" onchange="mostrarOtro()">
     <option value="">Seleccione un edificio...</option>
 </select>
+
+<input type="text" id="aula_otro" placeholder="Escribe el aula/espacio" style="display:none; margin-top:10px;">
 
 <label>Incidencia</label>
 <textarea id="incidencia" rows="4" placeholder="Describe la incidencia"></textarea>
@@ -104,13 +106,15 @@ const aulasInfantil = [
 "Despacho 1ª planta","Despacho 2ª planta",
 "Pasillo Izq. 1ª planta","Pasillo Dch. 1ª planta","Pasillo Izq. 2ª planta","Pasillo Dch. 2ª planta",
 "Teatro planta 0","Teatro patio cubierto","Sala desdoble 1","Sala desdoble 2",
-"Sala desdoble 3","Sala desdoble 4","Aula Alemán","Terrado","Servidor"
+"Sala desdoble 3","Sala desdoble 4","Aula Alemán","Terrado","Servidor",
+"Otro"
 ];
 
 const aulasAnexo = [
 "P1A","P1B","P1C","P2A","P2B","P2C",
 "Sala polivalente","WC 1ª planta","WC 2ª planta","Secretaría",
-"Sala profes","Pasillo 1ª planta","Pasillo 2ª planta","Servidor"
+"Sala profes","Pasillo 1ª planta","Pasillo 2ª planta","Servidor",
+"Otro"
 ];
 
 function cargarAulas() {
@@ -119,8 +123,8 @@ function cargarAulas() {
     aulaSelect.innerHTML = "";
 
     let lista = [];
-    if (edificio === "infantil") lista = aulasInfantil;
-    else if (edificio === "anexo") lista = aulasAnexo;
+    if (edificio === "Infantil") lista = aulasInfantil;
+    else if (edificio === "Anexo") lista = aulasAnexo;
 
     lista.forEach(a => {
         const opt = document.createElement("option");
@@ -130,9 +134,27 @@ function cargarAulas() {
     });
 }
 
+function mostrarOtro() {
+    const aulaSelect = document.getElementById("aula");
+    const otro = document.getElementById("aula_otro");
+
+    if (aulaSelect.value === "Otro") {
+        otro.style.display = "block";
+    } else {
+        otro.style.display = "none";
+        otro.value = "";
+    }
+}
+
 function enviarCorreo() {
     const edificio = document.getElementById('edificio').value;
-    const aula = document.getElementById('aula').value;
+    let aula = document.getElementById('aula').value;
+    const aula_otro = document.getElementById('aula_otro').value;
+
+    if (aula === "Otro" && aula_otro.trim() !== "") {
+        aula = aula_otro;
+    }
+
     const incidencia = document.getElementById('incidencia').value;
     const prioridad = document.getElementById('prioridad').value;
     const profe = document.getElementById('profe').value;
