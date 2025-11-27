@@ -67,8 +67,8 @@
 <label>Edificio</label>
 <select id="edificio" onchange="cargarAulas()">
     <option value="">Seleccionar edificio...</option>
-    <option value="Infantil">Edif. Infantil</option>
-    <option value="Anexo">Edif. Anexo</option>
+    <option value="Primaria">Edif. Primaria</option>
+    <option value="Llar">Edif. Llar</option>
 </select>
 
 <label>Aula / Espacio</label>
@@ -95,7 +95,8 @@
 <button onclick="enviarCorreo()">ENVIAR</button>
 
 <script>
-const aulasInfantil = [
+// LISTAS DE AULAS
+const aulasPrimaria = [
 "P3A","P3B","P3C","P4A","P4B","P4C","P5A","P5B","P5C",
 "1A","1B","1C","2A","2B","2C","3A","3B","3C","4A","4B","4C",
 "5A","5B","5C","6A","6B","6C",
@@ -110,7 +111,7 @@ const aulasInfantil = [
 "Otro"
 ];
 
-const aulasAnexo = [
+const aulasLlar = [
 "P1A","P1B","P1C","P2A","P2B","P2C",
 "Sala polivalente","WC 1ª planta","WC 2ª planta","Secretaría",
 "Sala profes","Pasillo 1ª planta","Pasillo 2ª planta","Servidor",
@@ -123,8 +124,8 @@ function cargarAulas() {
     aulaSelect.innerHTML = "";
 
     let lista = [];
-    if (edificio === "Infantil") lista = aulasInfantil;
-    else if (edificio === "Anexo") lista = aulasAnexo;
+    if (edificio === "Primaria") lista = aulasPrimaria;
+    else if (edificio === "Llar") lista = aulasLlar;
 
     lista.forEach(a => {
         const opt = document.createElement("option");
