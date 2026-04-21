@@ -257,22 +257,16 @@ async function enviarCorreo() {
     const prioridad = document.getElementById('prioridad').value;
     const profe = document.getElementById('profe').value;
 
-    const body =
-`Centro: ${centro}%0D%0A
-Edificio: ${edificio}%0D%0A
-Aula/Espacio: ${aula}%0D%0A
-Incidencia: ${incidencia}%0D%0A
-Prioridad: ${prioridad}%0D%0A
-Solicitante: ${profe}`;
+    // =========================
+    // 1️⃣ ENVÍO A LA API
+    // =========================
 
-    // Envío nuevo a la API
-    // Va antes del mailto, pero si falla no bloquea lo que ya funciona
     try {
         await fetch("https://api-incidencias-loreto.onrender.com/incidencia", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-token": "1234"
+                "x-token": "1234"   // luego lo securizamos
             },
             body: JSON.stringify({
                 centro: centro,
@@ -284,10 +278,21 @@ Solicitante: ${profe}`;
             })
         });
     } catch (error) {
-        console.error("Error enviando a la API:", error);
+        console.log("Error enviando a API:", error);
     }
 
-    // Flujo actual por correo: se mantiene igual
+    // =========================
+    // 2️⃣ ENVÍO POR CORREO (COMO SIEMPRE)
+    // =========================
+
+    const body =
+`Centro: ${centro}%0D%0A
+Edificio: ${edificio}%0D%0A
+Aula/Espacio: ${aula}%0D%0A
+Incidencia: ${incidencia}%0D%0A
+Prioridad: ${prioridad}%0D%0A
+Solicitante: ${profe}`;
+
     window.location.href =
     "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + body;
 }
