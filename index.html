@@ -257,27 +257,6 @@ function enviarCorreo() {
     const prioridad = document.getElementById('prioridad').value;
     const profe = document.getElementById('profe').value;
 
-    // 1) Intento de envío a la API, sin bloquear el correo
-    fetch("https://api-incidencias-loreto.onrender.com/incidencia", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "x-token": "1234"
-        },
-        body: JSON.stringify({
-            centro: centro,
-            edificio: edificio,
-            espacio: aula,
-            descripcion: incidencia,
-            prioridad: prioridad,
-            solicitante: profe
-        }),
-        keepalive: true
-    }).catch(error => {
-        console.log("Error enviando a API:", error);
-    });
-
-    // 2) Flujo actual por correo, intacto
     const body =
 `Centro: ${centro}%0D%0A
 Edificio: ${edificio}%0D%0A
