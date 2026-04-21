@@ -238,10 +238,10 @@ function mostrarOtro() {
 }
 
 // ====================
-// ENVÍO DE CORREO
+// ENVÍO A API + CORREO
 // ====================
 
-function enviarCorreo() {
+async function enviarCorreo() {
 
     const centro = document.getElementById('centro').value;
     const edificio = document.getElementById('edificio').value;
@@ -265,6 +265,29 @@ Incidencia: ${incidencia}%0D%0A
 Prioridad: ${prioridad}%0D%0A
 Solicitante: ${profe}`;
 
+    // Envío nuevo a la API
+    // Va antes del mailto, pero si falla no bloquea lo que ya funciona
+    try {
+        await fetch("https://api-incidencias-loreto.onrender.com/incidencia", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-token": "1234"
+            },
+            body: JSON.stringify({
+                centro: centro,
+                edificio: edificio,
+                espacio: aula,
+                descripcion: incidencia,
+                prioridad: prioridad,
+                solicitante: profe
+            })
+        });
+    } catch (error) {
+        console.error("Error enviando a la API:", error);
+    }
+
+    // Flujo actual por correo: se mantiene igual
     window.location.href =
     "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + body;
 }
