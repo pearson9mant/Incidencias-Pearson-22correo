@@ -241,7 +241,7 @@ function mostrarOtro() {
 // ENVÍO A API + CORREO
 // ====================
 
-async function enviarCorreo() {
+function enviarCorreo() {
 
     const centro = document.getElementById('centro').value;
     const edificio = document.getElementById('edificio').value;
@@ -257,34 +257,27 @@ async function enviarCorreo() {
     const prioridad = document.getElementById('prioridad').value;
     const profe = document.getElementById('profe').value;
 
-    // =========================
-    // 1️⃣ ENVÍO A LA API
-    // =========================
-
-    try {
-        await fetch("https://api-incidencias-loreto.onrender.com/incidencia", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "x-token": "1234"   // luego lo securizamos
-            },
-            body: JSON.stringify({
-                centro: centro,
-                edificio: edificio,
-                espacio: aula,
-                descripcion: incidencia,
-                prioridad: prioridad,
-                solicitante: profe
-            })
-        });
-    } catch (error) {
+    // 1) Intento de envío a la API, sin bloquear el correo
+    fetch("https://api-incidencias-loreto.onrender.com/incidencia", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-token": "1234"
+        },
+        body: JSON.stringify({
+            centro: centro,
+            edificio: edificio,
+            espacio: aula,
+            descripcion: incidencia,
+            prioridad: prioridad,
+            solicitante: profe
+        }),
+        keepalive: true
+    }).catch(error => {
         console.log("Error enviando a API:", error);
-    }
+    });
 
-    // =========================
-    // 2️⃣ ENVÍO POR CORREO (COMO SIEMPRE)
-    // =========================
-
+    // 2) Flujo actual por correo, intacto
     const body =
 `Centro: ${centro}%0D%0A
 Edificio: ${edificio}%0D%0A
@@ -296,6 +289,7 @@ Solicitante: ${profe}`;
     window.location.href =
     "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + body;
 }
+
 
 </script>
 
