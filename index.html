@@ -267,13 +267,13 @@ Solicitante: ${profe}`;
 
     // 🔴 ENVÍA A LA APP (CLAVE PARA MÓVIL)
     navigator.sendBeacon(
-        "https://api-incidencias-loreto.onrender.com/api/incidencias",
-        JSON.stringify({
-            asunto: incidencia,
-            body: cuerpoPlano,
-            remitente: profe
-        })
-    );
+    "https://api-incidencias-loreto.onrender.com/incidencia-beacon?token=1234",
+    new Blob([JSON.stringify({
+        asunto: incidencia,
+        body: cuerpoPlano,
+        remitente: profe
+    })], { type: "text/plain" })
+);
 
     // ✅ ABRE CORREO (lo que ya te funciona)
     window.location.href =
