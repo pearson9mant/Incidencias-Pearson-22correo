@@ -241,7 +241,7 @@ function mostrarOtro() {
 // ENVÍO DE CORREO
 // ====================
 
-function enviarCorreo() {
+async function enviarCorreo() {
 
     const centro = document.getElementById('centro').value;
     const edificio = document.getElementById('edificio').value;
@@ -257,7 +257,15 @@ function enviarCorreo() {
     const prioridad = document.getElementById('prioridad').value;
     const profe = document.getElementById('profe').value;
 
-    const body =
+    const cuerpoPlano =
+`Centro: ${centro}
+Edificio: ${edificio}
+Aula/Espacio: ${aula}
+Incidencia: ${incidencia}
+Prioridad: ${prioridad}
+Solicitante: ${profe}`;
+
+    const bodyMail =
 `Centro: ${centro}%0D%0A
 Edificio: ${edificio}%0D%0A
 Aula/Espacio: ${aula}%0D%0A
@@ -265,8 +273,26 @@ Incidencia: ${incidencia}%0D%0A
 Prioridad: ${prioridad}%0D%0A
 Solicitante: ${profe}`;
 
+    try {
+        await fetch("https://api-incidencias-loreto.onrender.com/api/incidencias", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-webhook-token": "1234"
+            },
+            body: JSON.stringify({
+                asunto: incidencia,
+                body: cuerpoPlano,
+                remitente: profe
+            })
+        });
+    } catch (error) {
+        console.log("Error enviando a app:", error);
+    }
+
+    // 👇 se abre el correo SOLO después del envío
     window.location.href =
-    "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + body;
+    "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + bodyMail;
 }
 
 </script>
