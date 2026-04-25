@@ -241,32 +241,61 @@ function mostrarOtro() {
 // ENVÍO DE CORREO
 // ====================
 
-function enviarCorreo() {
+async function enviarCorreo() {
 
     const centro = document.getElementById('centro').value;
     const edificio = document.getElementById('edificio').value;
 
     let aula = document.getElementById('aula').value;
-    const aula_otro = document.getElementById('aula_otro').value;
+    const aula_otro = document.getElementById('aula_otro').value.trim();
 
-    if (aula === "Otro" && aula_otro.trim() !== "") {
+    if (aula === "Otro" && aula_otro !== "") {
         aula = aula_otro;
     }
 
-    const incidencia = document.getElementById('incidencia').value;
+    const incidencia = document.getElementById('incidencia').value.trim();
     const prioridad = document.getElementById('prioridad').value;
-    const profe = document.getElementById('profe').value;
+    const profe = document.getElementById('profe').value.trim();
 
-    const body =
-`Centro: ${centro}%0D%0A
-Edificio: ${edificio}%0D%0A
-Aula/Espacio: ${aula}%0D%0A
-Incidencia: ${incidencia}%0D%0A
-Prioridad: ${prioridad}%0D%0A
+    if (!centro || !edificio || !aula || !incidencia || !profe) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
+
+    const cuerpoPlano =
+`Centro: ${centro}
+Edificio: ${edificio}
+Aula/Espacio: ${aula}
+Incidencia: ${incidencia}
+Prioridad: ${prioridad}
 Solicitante: ${profe}`;
 
+    try {
+        const respuesta = await fetch("https://api-incidencias-loreto.onrender.com/api/incidencias", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-webhook-token": "1234"
+            },
+            body: JSON.stringify({
+                asunto: incidencia,
+                body: cuerpoPlano,
+                remitente: profe
+            })
+        });
+
+        if (!respuesta.ok) {
+            throw new Error("Error API");
+        }
+
+        alert("Incidencia enviada a la app. Ahora se abrirá el correo.");
+
+    } catch (error) {
+        alert("No se pudo enviar a la app, pero se abrirá el correo.");
+    }
+
     window.location.href =
-    "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + body;
+        "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + encodeURIComponent(cuerpoPlano);
 }
 
 </script>
