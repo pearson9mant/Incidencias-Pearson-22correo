@@ -257,16 +257,27 @@ function enviarCorreo() {
     const prioridad = document.getElementById('prioridad').value;
     const profe = document.getElementById('profe').value;
 
-    const body =
-`Centro: ${centro}%0D%0A
-Edificio: ${edificio}%0D%0A
-Aula/Espacio: ${aula}%0D%0A
-Incidencia: ${incidencia}%0D%0A
-Prioridad: ${prioridad}%0D%0A
+    const cuerpoPlano =
+`Centro: ${centro}
+Edificio: ${edificio}
+Aula/Espacio: ${aula}
+Incidencia: ${incidencia}
+Prioridad: ${prioridad}
 Solicitante: ${profe}`;
 
+    // 🔴 ENVÍO A LA APP (CORREGIDO PARA MÓVIL)
+    navigator.sendBeacon(
+        "https://api-incidencias-loreto.onrender.com/incidencia-beacon?token=1234",
+        new Blob([JSON.stringify({
+            asunto: incidencia,
+            body: cuerpoPlano,
+            remitente: profe
+        })], { type: "text/plain" })
+    );
+
+    // ✅ CORREO (LO QUE YA FUNCIONA)
     window.location.href =
-    "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + body;
+    "mailto:jalmedac@abatoliba.edu?subject=Incidencia&body=" + encodeURIComponent(cuerpoPlano);
 }
 
 </script>
